@@ -24,6 +24,8 @@
                              * MAX(0, MIN((y)+(h),(r).y_org+(r).height) - MAX((y),(r).y_org)))
 #define LENGTH(X)             (sizeof X / sizeof X[0])
 #define TEXTW(X)              (drw_fontset_getwidth(drw, (X)) + lrpad)
+#define INTERRUPTED_SYSTEM_CALL 4
+#define OPERATION_CANCELLED 125
 
 /* enums */
 enum { SchemeNorm, SchemeSel, SchemeOut, SchemeLast }; /* color schemes */
@@ -344,7 +346,7 @@ keypress(XKeyEvent *ev)
 		switch(ksym) {
 		case XK_a: ksym = XK_Home;      break;
 		case XK_b: ksym = XK_Left;      break;
-		case XK_c: ksym = XK_Escape;    break;
+		case XK_c: exit(INTERRUPTED_SYSTEM_CALL);
 		case XK_d: ksym = XK_Delete;    break;
 		case XK_e: ksym = XK_End;       break;
 		case XK_f: ksym = XK_Right;     break;
@@ -448,7 +450,7 @@ insert:
 		break;
 	case XK_Escape:
 		cleanup();
-		exit(1);
+		exit(OPERATION_CANCELLED);
 	case XK_Home:
 	case XK_KP_Home:
 		if (sel == matches) {
